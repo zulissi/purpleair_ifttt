@@ -17,5 +17,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Runs a single command using the runners shell
+      
+      - name: Get purpleair pm2.5
+        run: curl -s https://api.purpleair.com/v1/sensors/${{ secrets.PURPLEAIR_SENSOR_ID }}?api_key=${{ secrets.PURPLEAIR_API_KEY }} | grep \ \"pm2.5\" | cut -d ':' -f2 | cut -d ',' -f1
       - name: trigger fan start
         run: curl -X POST ${{ secrets.IFTTT_FANSTART_WEBHOOK_URL }}
