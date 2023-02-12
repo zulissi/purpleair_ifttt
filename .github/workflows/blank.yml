@@ -21,10 +21,13 @@ jobs:
       - name: Get purpleair pm2.5
         run: |
           PM25=`curl -s https://api.purpleair.com/v1/sensors/${{ secrets.PURPLEAIR_SENSOR_ID }}?api_key=${{ secrets.PURPLEAIR_API_KEY }} | grep \ \"pm2.5\" | cut -d ':' -f2 | cut -d ',' -f1`
+          echo "PM25 is $PM25!"
           if (( $(echo "$PM25 > 20" |bc -l) )); then
-             curl -X POST ${{ secrets.IFTTT_FANSTART_WEBHOOK_URL }}
+            echo "Starting the fan!"
+            curl -X POST ${{ secrets.IFTTT_FANSTART_WEBHOOK_URL }}
           fi
           if (( $(echo "$PM25 < 5" |bc -l) )); then
-             curl -X POST ${{ secrets.IFTTT_FANSTOP_WEBHOOK_URL }}
+            echo "Stopping the fan!"
+            curl -X POST ${{ secrets.IFTTT_FANSTOP_WEBHOOK_URL }}
           fi
 
